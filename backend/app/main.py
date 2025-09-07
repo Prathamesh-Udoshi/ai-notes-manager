@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .routes import notes, ai
 from .database import engine, Base
 
@@ -6,6 +7,15 @@ from .database import engine, Base
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Notes API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Root endpoint
 @app.get("/")

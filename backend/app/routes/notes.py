@@ -4,10 +4,20 @@ from .. import models, schemas, database
 
 router = APIRouter()
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from .. import models, schemas, database
+from ..services.summarizer import generate_summary
+from ..services.title_generator import generate_title
+
+router = APIRouter()
+
 @router.post("/", response_model=schemas.NoteOut)
 def create_note(note: schemas.NoteCreate, db: Session = Depends(database.get_db)):
-    print(f"Creating note: {note.title}")
-    new_note = models.Note(title=note.title, content=note.content)
+    print(f"Creating note with content: {note.content}")
+    summary = generate_summary(note.content)
+    title = generate_title(note.content)
+    new_note = models.Note(title=title, content=note.content, summary=summary)
     db.add(new_note)
     db.commit()
     db.refresh(new_note)

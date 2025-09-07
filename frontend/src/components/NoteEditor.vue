@@ -11,9 +11,8 @@
             <v-form ref="form" v-model="valid">
               <v-text-field
                 v-model="note.title"
-                label="Title"
-                :rules="[v => !!v || 'Title is required']"
-                required
+                label="Title (optional - will be auto-generated if empty)"
+                placeholder="Enter a title or leave blank for AI-generated title"
               ></v-text-field>
               <v-textarea
                 v-model="note.content"
