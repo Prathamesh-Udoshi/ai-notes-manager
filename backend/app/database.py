@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Replace with your actual PostgreSQL credentials
-DATABASE_URL = "postgresql://postgres:pratham@localhost:5432/SmartNotes"
+DATABASE_URL = "sqlite:///./smart_notes.db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

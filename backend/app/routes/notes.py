@@ -6,10 +6,12 @@ router = APIRouter()
 
 @router.post("/", response_model=schemas.NoteOut)
 def create_note(note: schemas.NoteCreate, db: Session = Depends(database.get_db)):
+    print(f"Creating note: {note.title}")
     new_note = models.Note(title=note.title, content=note.content)
     db.add(new_note)
     db.commit()
     db.refresh(new_note)
+    print(f"Note created with ID: {new_note.id}")
     return new_note
 
 @router.get("/", response_model=list[schemas.NoteOut])
