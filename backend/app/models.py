@@ -8,3 +8,4 @@ class Note(Base):
     title = Column(String(255), nullable=False)
     content = Column(Text, nullable=False)
     summary = Column(Text, nullable=True)
+
