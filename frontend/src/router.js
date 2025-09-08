@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from './components/Dashboard.vue'
 import NoteList from './components/NoteList.vue'
 import NoteEditor from './components/NoteEditor.vue'
+import NoteViewer from './components/NoteViewer.vue'
 
 const routes = [
   { path: '/', component: Dashboard },
   { path: '/notes', component: NoteList },
   { path: '/notes/new', component: NoteEditor },
-  { path: '/notes/:id/edit', component: NoteEditor, props: true }
+  { path: '/notes/:id/edit', component: NoteEditor, props: true },
+  { path: '/notes/:id/view', component: NoteViewer, props: true }
 ]
 
 const router = createRouter({

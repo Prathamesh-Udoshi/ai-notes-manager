@@ -13,7 +13,6 @@
       <v-list-item
         v-for="note in notes"
         :key="note.id"
-        @click="editNote(note.id)"
         class="note-item"
       >
         <v-list-item-content>
@@ -21,11 +20,32 @@
           <v-list-item-subtitle>{{ getNoteSubtitle(note) }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
-          <v-btn icon @click.stop="deleteNote(note.id)">
-            <v-icon color="red">mdi-delete</v-icon>
-          </v-btn>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" @click.stop="viewNote(note.id)">
+                <v-icon color="blue">mdi-eye</v-icon>
+              </v-btn>
+            </template>
+            <span>View Note</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" @click.stop="editNote(note.id)">
+                <v-icon color="orange">mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <span>Edit Note</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" @click.stop="deleteNote(note.id)">
+                <v-icon color="red">mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <span>Delete Note</span>
+          </v-tooltip>
         </v-list-item-action>
-      </v-list-item>
+    </v-list-item>
     </v-list>
   </div>
 </template>
@@ -64,6 +84,9 @@ export default {
     },
     editNote(id) {
       this.$router.push(`/notes/${id}/edit`)
+    },
+    viewNote(id) {
+      this.$router.push(`/notes/${id}/view`)
     },
     getNoteSubtitle(note) {
       return note.summary || (note.content ? note.content.substring(0, 100) + '...' : 'No content')
