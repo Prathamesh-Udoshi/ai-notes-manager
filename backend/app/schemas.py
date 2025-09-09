@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class NoteBase(BaseModel):
     title: str
@@ -15,6 +16,7 @@ class NoteUpdate(BaseModel):
 class NoteOut(NoteBase):
     id: int
     summary: str | None
+    created_at: datetime
 
     class Config:
         from_attributes = True

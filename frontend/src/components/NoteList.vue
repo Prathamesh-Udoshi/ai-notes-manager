@@ -22,8 +22,11 @@
         style="border-bottom: 1px solid #ddd; padding: 16px 0;"
       >
         <h3 class="text-h6 font-weight-bold mb-2">{{ note.title || 'Untitled' }}</h3>
-        <p class="mb-3" style="font-size: 0.95rem; color: #333;">
+        <p class="mb-2" style="font-size: 0.95rem; color: #333;">
           {{ getNoteSubtitle(note) }}
+        </p>
+        <p class="mb-3" style="font-size: 0.85rem; color: #666;">
+          Created on: {{ formatDate(note.created_at) }}
         </p>
         <div class="d-flex" style="gap: 12px;">
           <v-btn small color="blue" @click.stop="viewNote(note.id)">
@@ -79,6 +82,17 @@ export default {
     },
     getNoteSubtitle(note) {
       return note.summary || (note.content ? note.content.substring(0, 100) + '...' : 'No content')
+    },
+    formatDate(dateString) {
+      if (!dateString) return 'Unknown'
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
     }
   }
 }
