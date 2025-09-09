@@ -1,53 +1,44 @@
 <template>
-  <div>
-    <v-row justify="space-between" align="center" class="mb-4">
-      <v-col cols="auto">
-        <h1>Notes</h1>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn color="primary" @click="$router.push('/notes/new')">Create Note</v-btn>
-      </v-col>
-    </v-row>
+  <v-container fluid class="pa-0" style="min-height: 100vh; padding: 40px 24px;">
+    <div class="d-flex align-center justify-space-between mb-6">
+      <h2 class="text-h5 font-weight-bold">
+        <v-icon left>mdi-note-multiple</v-icon> My Notes
+      </h2>
+      <v-btn color="indigo" @click="$router.push('/notes/new')">
+        <v-icon left>mdi-plus</v-icon> Create Note
+      </v-btn>
+    </div>
 
-    <v-list>
-      <v-list-item
+    <div v-if="notes.length === 0" class="text-center pa-8">
+      <v-icon size="64" color="grey" class="mb-4">mdi-note-off</v-icon>
+      <h3 class="text-h6 grey--text">No notes yet</h3>
+      <p class="body-1 grey--text">Create your first note to get started!</p>
+    </div>
+
+    <div v-else>
+      <div
         v-for="note in notes"
         :key="note.id"
-        class="note-item"
+        style="border-bottom: 1px solid #ddd; padding: 16px 0;"
       >
-        <v-list-item-content>
-          <v-list-item-title>{{ note.title || 'Untitled' }}</v-list-item-title>
-          <v-list-item-subtitle>{{ getNoteSubtitle(note) }}</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" @click.stop="viewNote(note.id)">
-                <v-icon color="blue">mdi-eye</v-icon>
-              </v-btn>
-            </template>
-            <span>View Note</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" @click.stop="editNote(note.id)">
-                <v-icon color="orange">mdi-pencil</v-icon>
-              </v-btn>
-            </template>
-            <span>Edit Note</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" @click.stop="deleteNote(note.id)">
-                <v-icon color="red">mdi-delete</v-icon>
-              </v-btn>
-            </template>
-            <span>Delete Note</span>
-          </v-tooltip>
-        </v-list-item-action>
-    </v-list-item>
-    </v-list>
-  </div>
+        <h3 class="text-h6 font-weight-bold mb-2">{{ note.title || 'Untitled' }}</h3>
+        <p class="mb-3" style="font-size: 0.95rem; color: #333;">
+          {{ getNoteSubtitle(note) }}
+        </p>
+        <div class="d-flex" style="gap: 12px;">
+          <v-btn small color="blue" @click.stop="viewNote(note.id)">
+            <v-icon left>mdi-eye</v-icon> View
+          </v-btn>
+          <v-btn small color="orange" @click.stop="editNote(note.id)">
+            <v-icon left>mdi-pencil</v-icon> Edit
+          </v-btn>
+          <v-btn small color="red" @click.stop="deleteNote(note.id)">
+            <v-icon left>mdi-delete</v-icon> Delete
+          </v-btn>
+        </div>
+      </div>
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -56,9 +47,7 @@ import { getNotes, deleteNote } from '../api'
 export default {
   name: 'NoteList',
   data() {
-    return {
-      notes: []
-    }
+    return { notes: [] }
   },
   async mounted() {
     await this.loadNotes()
@@ -94,9 +83,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.note-item {
-  cursor: pointer;
-}
-</style>

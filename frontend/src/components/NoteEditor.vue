@@ -1,47 +1,46 @@
 <template>
-  <div>
-    <v-row>
-      <v-col cols="12" md="8" offset-md="2">
-        <v-card>
-          <v-card-title>
-            <span v-if="isEditMode">Edit Note</span>
-            <span v-else>Create Note</span>
-          </v-card-title>
-          <v-card-text>
-            <v-form ref="form" v-model="valid">
-              <v-text-field
-                v-model="note.title"
-                label="Title (optional - will be auto-generated if empty)"
-                placeholder="Enter a title or leave blank for AI-generated title"
-              ></v-text-field>
-              <v-textarea
-                v-model="note.content"
-                label="Content"
-                :rules="[v => !!v || 'Content is required']"
-                rows="10"
-                required
-              ></v-textarea>
-              <v-textarea
-                v-model="note.summary"
-                label="Summary"
-                rows="4"
-                readonly
-              ></v-textarea>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="saveNote" :disabled="!valid">
-              {{ isEditMode ? 'Update' : 'Create' }}
-            </v-btn>
-            <v-btn color="secondary" @click="summarize" :disabled="!note.content">
-              Summarize
-            </v-btn>
-            <v-btn text @click="$router.push('/notes')">Cancel</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </div>
+  <v-container fluid class="pa-0" style="padding: 40px 24px;">
+    <h2 class="text-h5 font-weight-bold mb-6">
+      <v-icon left>mdi-note-edit</v-icon>
+      {{ isEditMode ? 'Edit Note' : 'Create Note' }}
+    </h2>
+
+    <v-form ref="form" v-model="valid">
+      <v-text-field
+        v-model="note.title"
+        label="Title (optional - will be auto-generated if empty)"
+        placeholder="Enter a title or leave blank for AI-generated title"
+        full-width
+      ></v-text-field>
+
+      <v-textarea
+        v-model="note.content"
+        label="Content"
+        :rules="[v => !!v || 'Content is required']"
+        rows="10"
+        required
+        full-width
+      ></v-textarea>
+
+      <v-textarea
+        v-model="note.summary"
+        label="Summary"
+        rows="4"
+        readonly
+        full-width
+      ></v-textarea>
+
+      <div class="mt-4">
+        <v-btn color="indigo" @click="saveNote" :disabled="!valid">
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </v-btn>
+        <v-btn color="grey darken-1" @click="summarize" :disabled="!note.content">
+          <v-icon left>mdi-brain</v-icon> Summarize
+        </v-btn>
+        <v-btn text @click="$router.push('/notes')">Cancel</v-btn>
+      </div>
+    </v-form>
+  </v-container>
 </template>
 
 <script>
@@ -49,19 +48,10 @@ import { createNote, getNote, updateNote, summarizeText } from '../api'
 
 export default {
   name: 'NoteEditor',
-  props: {
-    id: {
-      type: String,
-      default: null
-    }
-  },
+  props: { id: { type: String, default: null } },
   data() {
     return {
-      note: {
-        title: '',
-        content: '',
-        summary: ''
-      },
+      note: { title: '', content: '', summary: '' },
       valid: false,
       isEditMode: false
     }
@@ -72,7 +62,6 @@ export default {
       try {
         const response = await getNote(this.id)
         this.note = response.data
-        // Ensure properties are defined
         this.note.title = this.note.title || ''
         this.note.content = this.note.content || ''
         this.note.summary = this.note.summary || ''

@@ -1,37 +1,28 @@
 <template>
-  <div>
-    <v-row>
-      <v-col cols="12" md="8" offset-md="2">
-        <v-card>
-          <v-card-title>
-            View Note
-          </v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="note.title"
-              label="Title"
-              readonly
-            ></v-text-field>
-            <v-textarea
-              v-model="note.content"
-              label="Content"
-              rows="10"
-              readonly
-            ></v-textarea>
-            <v-textarea
-              v-model="note.summary"
-              label="Summary"
-              rows="4"
-              readonly
-            ></v-textarea>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="$router.push('/notes')">Back to Notes</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </div>
+  <v-container fluid class="pa-0" style="padding: 40px 24px;">
+    <h2 class="text-h5 font-weight-bold mb-6">
+      <v-icon left>mdi-eye</v-icon> View Note
+    </h2>
+
+    <div style="margin-bottom: 16px;">
+      <h3 class="text-h6 mb-2">Title</h3>
+      <p style="padding: 12px; background: #f5f5f5;">{{ note.title }}</p>
+    </div>
+
+    <div style="margin-bottom: 16px;">
+      <h3 class="text-h6 mb-2">Content</h3>
+      <p style="padding: 12px; background: #f5f5f5; white-space: pre-wrap;">{{ note.content }}</p>
+    </div>
+
+    <div style="margin-bottom: 16px;">
+      <h3 class="text-h6 mb-2">Summary</h3>
+      <p style="padding: 12px; background: #f5f5f5;">{{ note.summary }}</p>
+    </div>
+
+    <v-btn color="indigo" @click="$router.push('/notes')">
+      <v-icon left>mdi-arrow-left</v-icon> Back to Notes
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
@@ -39,26 +30,16 @@ import { getNote } from '../api'
 
 export default {
   name: 'NoteViewer',
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
+  props: { id: { type: String, required: true } },
   data() {
     return {
-      note: {
-        title: '',
-        content: '',
-        summary: ''
-      }
+      note: { title: '', content: '', summary: '' }
     }
   },
   async mounted() {
     try {
       const response = await getNote(this.id)
       this.note = response.data
-      // Ensure properties are defined
       this.note.title = this.note.title || ''
       this.note.content = this.note.content || ''
       this.note.summary = this.note.summary || ''
