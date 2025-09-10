@@ -3,21 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routes import notes, ai
 from .database import engine, Base
 
-# This creates the notes table automatically if not exists
+# Create tables automatically if not exists
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Notes API")
 
-import uvicorn
-
-if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=False)
-
-
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_origins=[
+        "http://localhost:5173",       # local dev
+        "https://your-frontend.vercel.app"  # deployed frontend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,5 +25,6 @@ app.add_middleware(
 def root():
     return {"message": "Smart Notes API is running 🚀"}
 
+# Routers
 app.include_router(notes.router, prefix="/notes", tags=["Notes"])
 app.include_router(ai.router, prefix="/ai", tags=["AI"])
