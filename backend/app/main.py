@@ -2,18 +2,26 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import notes, ai
 from .database import engine, Base
+from contextlib import asynccontextmanager
 
-# Create tables automatically if not exists
-Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup code
+    print("Initializing database...")
+    Base.metadata.create_all(bind=engine)
+    print("Database initialized ✅")
+    yield
+    # Shutdown code (if any)
+    print("Shutting down...")
 
-app = FastAPI(title="Smart Notes API")
+app = FastAPI(title="Smart Notes API", lifespan=lifespan)
 
-# Add CORS middleware
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",       # local dev
-        "https://your-frontend.vercel.app"  # deployed frontend
+        "http://localhost:5173",  # local dev
+        # add frontend URL later
     ],
     allow_credentials=True,
     allow_methods=["*"],

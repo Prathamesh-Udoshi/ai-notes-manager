@@ -3,8 +3,15 @@ nltk.download('stopwords')
 from transformers import pipeline
 from rake_nltk import Rake
 
-# Load BART in text2text-generation
-title_gen = pipeline("text2text-generation", model="facebook/bart-large-cnn")
+# Lazy load title generator with lighter model
+_title_gen = None
+
+def get_title_generator():
+    global _title_gen
+    if _title_gen is None:
+        # Use a lighter model for less memory usage
+        _title_gen = pipeline("text2text-generation", model="sshleifer/distilbart-cnn-12-6")
+    return _title_gen
 
 def generate_keywords(text: str, num_keywords: int = 3):
     """Extract top keywords using RAKE"""
@@ -17,7 +24,7 @@ def generate_title(text: str) -> str:
     if not text or len(text.split()) < 5:
         return "Untitled Note"
 
-    # Extract keywords to guide BART
+    # Extract keywords to guide the model
     keywords = generate_keywords(text)
     keywords_str = ", ".join(keywords)
 
@@ -30,6 +37,7 @@ def generate_title(text: str) -> str:
     )
 
     try:
+        title_gen = get_title_generator()
         result = title_gen(
             prompt,
             max_length=12,
@@ -47,7 +55,7 @@ def generate_title(text: str) -> str:
         # Capitalize each word
         title = " ".join(word.capitalize() for word in title.split())
 
-        # Ensure it’s not just the first line of text
+        # Ensure it's not just the first line of text
         if text.lower().startswith(title.lower()):
             title = " ".join(keywords).title()
 
