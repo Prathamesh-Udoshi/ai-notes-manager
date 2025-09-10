@@ -30,11 +30,11 @@
         full-width
       ></v-textarea>
 
-      <div class="mt-4 d-flex" style="gap: 16px;">
+      <div class="mt-4 d-flex flex-wrap" style="gap: 16px;">
         <v-btn color="indigo" @click="saveNote" :disabled="!note.content.trim()">
           {{ isEditMode ? 'Update' : 'Create' }}
         </v-btn>
-        <v-btn color="grey darken-1" @click="summarize" :disabled="!note.content.trim()">
+        <v-btn color="indigo" @click="summarize" :disabled="!note.content.trim()">
           <v-icon left>mdi-brain</v-icon> Summarize
         </v-btn>
         <v-btn text @click="$router.push('/notes')">Cancel</v-btn>
