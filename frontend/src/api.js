@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://ai-notes-backend-ef9c.onrender.com'; // Adjust if backend runs on different port or host
+const API_BASE_URL = 'https://ai-notes-backend-ef9c.onrender.com/'; // Adjust if backend runs on different port or host
 
 export const getNotes = () => {
   return axios.get(`${API_BASE_URL}/notes/`);

@@ -20,8 +20,9 @@ app = FastAPI(title="Smart Notes API", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # local dev
-        # add frontend URL later
+        "http://localhost:5173",               # local dev
+        "https://note-it-5hrq.onrender.com",   # frontend URL deployed
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],
